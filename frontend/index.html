@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediPredict AI — Age & Gender Disease Analysis System</title>
+  <meta name="description" content="AI-powered patient disease prediction and analysis system using age and gender data. Discover disease patterns, risk trends, and personalized health insights." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ PARTICLES ══════════ -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- ═══════════════════════════════════════════ NAVBAR ════════════ -->
+<nav id="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo">⚕</div>
+    <span class="nav-title">MediPredict <span class="accent">AI</span></span>
+  </div>
+  <div class="nav-links">
+    <a href="#hero" class="nav-link active" onclick="scrollTo('hero')">Home</a>
+    <a href="#predict" class="nav-link" onclick="scrollTo('predict')">Predict</a>
+    <a href="#dashboard" class="nav-link" onclick="scrollTo('dashboard')">Analytics</a>
+    <a href="#trends" class="nav-link" onclick="scrollTo('trends')">Risk Trends</a>
+    <a href="#insights" class="nav-link" onclick="scrollTo('insights')">Insights</a>
+  </div>
+  <div class="nav-status" id="navStatus">
+    <span class="status-dot"></span>
+    <span class="status-text">Connecting...</span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ HERO ══════════════ -->
+<section id="hero" class="section hero-section">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-icon">🧬</span>
+      <span>AI-Powered Medical Intelligence</span>
+    </div>
+    <h1 class="hero-title">
+      Predict Disease Risk<br />
+      <span class="gradient-text">Before It Predicts You</span>
+    </h1>
+    <p class="hero-subtitle">
+      Advanced machine learning analysis of <span id="heroRecords" class="stat-highlight">15,000+</span> patient records
+      to forecast disease risk based on your age and gender — with future trend projections.
+    </p>
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat">
+        <div class="stat-value" id="statRecords">—</div>
+        <div class="stat-label">Patient Records</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-value" id="statDiseases">15+</div>
+        <div class="stat-label">Diseases Tracked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-value" id="statAccuracy">RF</div>
+        <div class="stat-label">ML Model</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <button class="btn-primary btn-glow" id="heroCTA" onclick="smoothScrollTo('predict')">
+        <span class="btn-icon">🔬</span>
+        Analyze My Risk
+      </button>
+      <button class="btn-secondary" onclick="smoothScrollTo('dashboard')">
+        <span class="btn-icon">📊</span>
+        View Analytics
+      </button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="dna-helix-container">
+      <div class="orbit orbit-1"><div class="orb orb-blue"></div></div>
+      <div class="orbit orbit-2"><div class="orb orb-coral"></div></div>
+      <div class="orbit orbit-3"><div class="orb orb-green"></div></div>
+      <div class="center-sphere">
+        <div class="sphere-text">AI</div>
+        <div class="sphere-subtext">Health</div>
+      </div>
+      <div class="pulse-ring ring-1"></div>
+      <div class="pulse-ring ring-2"></div>
+      <div class="pulse-ring ring-3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ PREDICT ══════════ -->
+<section id="predict" class="section predict-section">
+  <div class="section-header">
+    <div class="section-badge">🔬 Prediction Engine</div>
+    <h2 class="section-title">Disease Risk <span class="gradient-text">Prediction</span></h2>
+    <p class="section-subtitle">Enter your details to receive personalized disease risk assessment</p>
+  </div>
+
+  <div class="predict-container">
+    <!-- Input Panel -->
+    <div class="input-panel glass-card">
+      <h3 class="panel-title">Patient Profile</h3>
+
+      <!-- Age Input -->
+      <div class="input-group" id="ageGroup">
+        <label class="input-label">
+          <span class="label-icon">🎂</span>
+          Age
+          <span class="age-display" id="ageDisplay">30</span>
+        </label>
+        <div class="slider-container">
+          <input type="range" id="ageSlider" class="age-slider" min="1" max="100" value="30" />
+          <div class="slider-track-fill" id="sliderFill"></div>
+        </div>
+        <div class="slider-labels">
+          <span>1</span>
+          <span>25</span>
+          <span>50</span>
+          <span>75</span>
+          <span>100</span>
+        </div>
+        <div class="age-group-badge" id="ageGroupBadge">Adult (30-44)</div>
+      </div>
+
+      <!-- Gender Input -->
+      <div class="input-group" id="genderGroup">
+        <label class="input-label">
+          <span class="label-icon">👤</span>
+          Gender
+        </label>
+        <div class="gender-toggle">
+          <button class="gender-btn active" id="genderMale" onclick="selectGender('Male')">
+            <span class="gender-icon">♂</span>
+            <span>Male</span>
+          </button>
+          <button class="gender-btn" id="genderFemale" onclick="selectGender('Female')">
+            <span class="gender-icon">♀</span>
+            <span>Female</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-predict btn-glow" id="predictBtn" onclick="runPrediction()">
+        <span class="btn-icon">🧠</span>
+        <span id="predictBtnText">Analyze Risk Profile</span>
+        <div class="btn-spinner" id="predictSpinner" style="display:none"></div>
+      </button>
+
+      <p class="disclaimer">⚠️ For educational purposes only. Not a substitute for medical advice.</p>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-placeholder" id="resultsPlaceholder">
+        <div class="placeholder-icon">🩺</div>
+        <p>Enter your age and gender, then click<br /><strong>Analyze Risk Profile</strong> to see predictions</p>
+      </div>
+
+      <!-- Prediction Results -->
+      <div class="prediction-results" id="predictionResults" style="display:none">
+        <div class="results-header">
+          <div class="results-profile">
+            <span class="profile-icon" id="profileIcon">👤</span>
+            <div>
+              <div class="profile-name" id="profileName">Patient Profile</div>
+              <div class="profile-agegroup" id="profileAgeGroup">Age Group</div>
+            </div>
+          </div>
+          <div class="confidence-ring-container">
+            <canvas id="confidenceDoughnut" width="100" height="100"></canvas>
+            <div class="ring-label">Top Risk</div>
+          </div>
+        </div>
+
+        <h4 class="results-sub">Top Disease Risks</h4>
+        <div id="diseaseCards" class="disease-cards"></div>
+
+        <h4 class="results-sub" style="margin-top:1.5rem">Future Risk Projection</h4>
+        <div id="futureRisks" class="future-risks"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ DASHBOARD ════════ -->
+<section id="dashboard" class="section dashboard-section">
+  <div class="section-header">
+    <div class="section-badge">📊 Analytics Dashboard</div>
+    <h2 class="section-title">Disease Pattern <span class="gradient-text">Analysis</span></h2>
+    <p class="section-subtitle">Explore disease distributions across age groups and genders</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Gender Distribution Chart -->
+    <div class="chart-card glass-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <span class="chart-icon">⚥</span>
+          Disease by Gender
+        </div>
+        <div class="chart-badge">Bar Chart</div>
+      </div>
+      <canvas id="genderChart" height="300"></canvas>
+    </div>
+
+    <!-- Top Diseases Doughnut -->
+    <div class="chart-card glass-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <span class="chart-icon">🔵</span>
+          Disease Distribution
+        </div>
+        <div class="chart-badge">Doughnut</div>
+      </div>
+      <canvas id="prevalenceChart" height="300"></canvas>
+    </div>
+
+    <!-- Age Group Line Chart -->
+    <div class="chart-card glass-card chart-wide">
+      <div class="chart-header">
+        <div class="chart-title">
+          <span class="chart-icon">📈</span>
+          Disease Prevalence by Age Group
+        </div>
+        <div class="chart-badge">Line Chart</div>
+      </div>
+      <canvas id="ageGroupChart" height="250"></canvas>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="chart-card glass-card chart-wide">
+      <div class="chart-header">
+        <div class="chart-title">
+          <span class="chart-icon">🌡️</span>
+          Age × Disease Intensity Heatmap
+        </div>
+        <div class="chart-badge">Heatmap</div>
+      </div>
+      <div id="heatmapContainer" class="heatmap-container"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ TRENDS ═══════════ -->
+<section id="trends" class="section trends-section">
+  <div class="section-header">
+    <div class="section-badge">📉 Risk Trends</div>
+    <h2 class="section-title">Future Risk <span class="gradient-text">Projections</span></h2>
+    <p class="section-subtitle">How disease risks evolve across decades of life</p>
+  </div>
+
+  <div class="trends-container">
+    <div class="chart-card glass-card chart-full">
+      <div class="chart-header">
+        <div class="chart-title">
+          <span class="chart-icon">🔮</span>
+          Disease Risk by Age Decade
+        </div>
+        <div class="trend-filters" id="trendFilters"></div>
+      </div>
+      <canvas id="trendsChart" height="300"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ INSIGHTS ═════════ -->
+<section id="insights" class="section insights-section">
+  <div class="section-header">
+    <div class="section-badge">💡 Dataset Insights</div>
+    <h2 class="section-title">Medical Intelligence <span class="gradient-text">Overview</span></h2>
+    <p class="section-subtitle">Key statistics from our comprehensive patient dataset</p>
+  </div>
+
+  <div class="insights-grid" id="insightsGrid">
+    <div class="insight-card glass-card">
+      <div class="insight-icon">📋</div>
+      <div class="insight-value" id="insightRecords">—</div>
+      <div class="insight-label">Total Patient Records</div>
+    </div>
+    <div class="insight-card glass-card">
+      <div class="insight-icon">🦠</div>
+      <div class="insight-value" id="insightDiseases">—</div>
+      <div class="insight-label">Diseases Monitored</div>
+    </div>
+    <div class="insight-card glass-card">
+      <div class="insight-icon">👨</div>
+      <div class="insight-value" id="insightMale">—</div>
+      <div class="insight-label">Male Patients</div>
+    </div>
+    <div class="insight-card glass-card">
+      <div class="insight-icon">👩</div>
+      <div class="insight-value" id="insightFemale">—</div>
+      <div class="insight-label">Female Patients</div>
+    </div>
+    <div class="insight-card glass-card">
+      <div class="insight-icon">📅</div>
+      <div class="insight-value" id="insightAgeRange">—</div>
+      <div class="insight-label">Age Range</div>
+    </div>
+    <div class="insight-card glass-card">
+      <div class="insight-icon">⚖️</div>
+      <div class="insight-value" id="insightAvgAge">—</div>
+      <div class="insight-label">Average Patient Age</div>
+    </div>
+  </div>
+
+  <!-- Disease Encyclopedia -->
+  <div class="encyclopedia-section">
+    <h3 class="enc-title">Disease Risk Encyclopedia</h3>
+    <div class="enc-grid" id="encGrid"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="nav-logo">⚕</div>
+      <span>MediPredict AI</span>
+    </div>
+    <p class="footer-disclaimer">
+      This system is for educational and research purposes only. 
+      Always consult a qualified healthcare professional for medical advice.
+    </p>
+    <p class="footer-credit">Built with Python • Flask • Scikit-Learn • Chart.js</p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast"></div>
+
+<script src="js/animations.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
