@@ -113,6 +113,3 @@ This system is built for **educational and research purposes only**. The predict
 
 ---
 
-<p align="center">
-  Built with ❤️ by <strong>Pratyush</strong>
-</p>
